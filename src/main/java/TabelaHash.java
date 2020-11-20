@@ -29,8 +29,7 @@ public class TabelaHash<C, V> {
 
     public int getIndex(C chave) {
         int hashCode = chave.hashCode();
-        int index = hashCode % tamanhoTabela;
-        return index;
+        return (hashCode & 0x7fffffff) % tamanhoTabela;
     }
 
     public V remove (C chave) {
@@ -73,7 +72,7 @@ public class TabelaHash<C, V> {
 
         while (cabeca != null) {
             if (cabeca.chave.equals(chave)) {
-                cabeca.valor = valor;
+                cabeca.valor =  valor;
                 return;
             }
             cabeca = cabeca.proximo;
@@ -81,7 +80,7 @@ public class TabelaHash<C, V> {
 
         tamanhoAtual++;
         cabeca = tabelaHash.get(index);
-        NoHash<C, V> novoNo = new NoHash<C, V>(chave, valor);
+        NoHash<C, V> novoNo = new NoHash<>(chave, valor);
         novoNo.proximo = cabeca;
         tabelaHash.set(index, novoNo);
 
@@ -103,6 +102,7 @@ public class TabelaHash<C, V> {
     public static void main(String[] args)
     {
         TabelaHash<String, Integer> hash = new TabelaHash<>();
+        System.out.println(hash.get("coder"));
         hash.add("this",1 );
         hash.add("coder",2 );
         hash.add("this",4 );
@@ -111,5 +111,13 @@ public class TabelaHash<C, V> {
         System.out.println(hash.remove("this"));
         System.out.println(hash.remove("this"));
         System.out.println(hash.tamanho());
+        hash.add("coder", 1000);
+        hash.add("coder", 30);
+        hash.add("coder", 200);
+        hash.add("coder", 70);
+        System.out.println(hash.get("coder"));
+        Integer num = 1 + hash.get("coder");
+        hash.add("coder", num);
+        System.out.println(hash.get("coder"));
     }
 }

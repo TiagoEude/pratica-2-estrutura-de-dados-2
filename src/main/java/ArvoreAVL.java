@@ -1,10 +1,13 @@
 
 class No {
-    int chave, altura;
+    String chave;
+    Integer valor;
+    int altura;
     No esquerdo, direito;
 
-    No(int chave) {
+    No(String chave) {
         this.chave = chave;
+        this.valor = 1;
         this.altura = 1;
     }
 }
@@ -18,7 +21,7 @@ public class ArvoreAVL {
     }
 
     int max(int a, int b) {
-        return (a > b) ? a : b;
+        return Math.max(a, b);
     }
 
     No rotacaoDireita(No x) {
@@ -52,26 +55,29 @@ public class ArvoreAVL {
         return altura(no.esquerdo) - altura(no.direito);
     }
 
-    No inserir(No no, int chave) {
+    No inserir(No no, String chave) {
 
         if (no == null) return (new No(chave));
 
-        if (chave < no.chave) no.esquerdo = inserir(no.esquerdo, chave);
-        else if (chave > no.chave) no.direito = inserir(no.direito, chave);
-        else return no;
+        if (chave.compareTo(no.chave) < 0) no.esquerdo = inserir(no.esquerdo, chave);
+        else if (chave.compareTo(no.chave) > 0) no.direito = inserir(no.direito, chave);
+        else {
+            no.valor += 1;
+            return no;
+        }
 
         no.altura = 1 + max(altura(no.esquerdo), altura(no.direito));
 
         int fb = getFB(no);
-        if (fb > 1 && chave < no.esquerdo.chave) return rotacaoDireita(no);
-        if (fb < -1 && chave > no.direito.chave) return rotacaoEsquerda(no);
+        if (fb > 1 && chave.compareTo(no.esquerdo.chave) < 0) return rotacaoDireita(no);
+        if (fb < -1 && chave.compareTo(no.direito.chave) > 0) return rotacaoEsquerda(no);
 
-        if (fb > 1 && chave > no.esquerdo.chave) {
+        if (fb > 1 && chave.compareTo(no.esquerdo.chave) > 0) {
             no.esquerdo = rotacaoEsquerda(no.esquerdo);
             return rotacaoDireita(no);
         }
 
-        if (fb < -1 && chave < no.direito.chave) {
+        if (fb < -1 && chave.compareTo(no.direito.chave) < 0) {
             no.direito = rotacaoDireita(no.direito);
             return rotacaoEsquerda(no);
         }
@@ -81,7 +87,7 @@ public class ArvoreAVL {
 
     void preOrder(No no) {
         if (no != null) {
-            System.out.print(no.chave + " ");
+            System.out.print(no.chave + " - " + no.valor + "; ");
             preOrder(no.esquerdo);
             preOrder(no.direito);
         }
@@ -89,20 +95,22 @@ public class ArvoreAVL {
 
     No noDeMenorValor(No no) {
         No noCorrente = no;
-        while (noCorrente != null) noCorrente = noCorrente.esquerdo;
+        while (noCorrente.esquerdo != null) noCorrente = noCorrente.esquerdo;
         return noCorrente;
     }
 
-    No deletar(No raiz, int chave) {
+    No deletar(No raiz, String chave) {
         if (raiz == null) return raiz;
 
-        if (chave < raiz.chave) raiz.esquerdo  = deletar(raiz.esquerdo, chave);
-        else if (chave > raiz.chave) raiz.direito = deletar(raiz.direito, chave);
+        if (chave.compareTo(raiz.chave) < 0) raiz.esquerdo  = deletar(raiz.esquerdo, chave);
+
+        else if (chave.compareTo(raiz.chave) > 0) raiz.direito = deletar(raiz.direito, chave);
+
         else {
             if ((raiz.esquerdo == null) || (raiz.direito == null)) {
                 No temp = null;
                 if (temp == raiz.esquerdo) temp = raiz.direito;
-                else temp = raiz.direito;
+                else temp = raiz.esquerdo;
 
                 if (temp == null) {
                     temp = raiz;
@@ -147,40 +155,24 @@ public class ArvoreAVL {
         ArvoreAVL tree = new ArvoreAVL();
 
         /* Constructing tree given in the above figure */
-        tree.raiz = tree.inserir(tree.raiz, 9);
-        tree.raiz = tree.inserir(tree.raiz, 5);
-        tree.raiz = tree.inserir(tree.raiz, 10);
-        tree.raiz = tree.inserir(tree.raiz, 0);
-        tree.raiz = tree.inserir(tree.raiz, 6);
-        tree.raiz = tree.inserir(tree.raiz, 11);
-        tree.raiz = tree.inserir(tree.raiz, -1);
-        tree.raiz = tree.inserir(tree.raiz, 1);
-        tree.raiz = tree.inserir(tree.raiz, 2);
+        tree.raiz = tree.inserir(tree.raiz, "a");
+        tree.raiz = tree.inserir(tree.raiz, "b");
+        tree.raiz = tree.inserir(tree.raiz, "c");
+        tree.raiz = tree.inserir(tree.raiz, "c");
+        tree.raiz = tree.inserir(tree.raiz, "c");
+        tree.raiz = tree.inserir(tree.raiz, "c");
+        tree.raiz = tree.inserir(tree.raiz, "d");
+        tree.raiz = tree.inserir(tree.raiz, "e");
+        tree.raiz = tree.inserir(tree.raiz, "f");
+        tree.raiz = tree.inserir(tree.raiz, "g");
+        tree.raiz = tree.inserir(tree.raiz, "h");
+        tree.raiz = tree.inserir(tree.raiz, "i");
 
-        /* The constructed AVL Tree would be
-        9
-        / \
-        1 10
-        / \ \
-        0 5 11
-        / / \
-        -1 2 6
-        */
         System.out.println("Preorder traversal of "+
                 "constructed tree is : ");
         tree.preOrder(tree.raiz);
 
-        tree.raiz = tree.deletar(tree.raiz, 10);
-
-        /* The AVL Tree after deletion of 10
-        1
-        / \
-        0 9
-        /     / \
-        -1 5 11
-        / \
-        2 6
-        */
+        tree.raiz = tree.deletar(tree.raiz, "f");
         System.out.println("");
         System.out.println("Preorder traversal after "+
                 "deletion of 10 :");
