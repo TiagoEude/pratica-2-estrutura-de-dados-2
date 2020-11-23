@@ -1,19 +1,17 @@
 import java.util.List;
 
-public class TesteLista {
+public class TesteLista
+{
+    Lista lista;
+    int contador;
 
-    List<String> registros;
-    Integer contador;
-
-    public TesteLista(List<String> registros)
+    public TesteLista()
     {
-        this.registros = registros;
+        this.lista = new Lista();
     }
 
-    public void run()
+    public void run(List<String> registros)
     {
-        Lista lista = new Lista();
-
         for (String registro : registros)
         {
             contador += 1;

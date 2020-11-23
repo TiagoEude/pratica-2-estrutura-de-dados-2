@@ -1,21 +1,21 @@
 
-class No {
+class NoAVL {
     String chave;
-    Integer valor;
+    int frequencia;
     int altura;
-    No esquerdo, direito;
+    NoAVL esquerdo, direito;
 
-    No(String chave) {
+    NoAVL(String chave) {
         this.chave = chave;
-        this.valor = 1;
+        this.frequencia = 1;
         this.altura = 1;
     }
 }
 
 public class ArvoreAVL {
-    No raiz;
+    NoAVL raiz;
 
-    int altura(No N) {
+    int altura(NoAVL N) {
         if (N == null) return 0;
         return N.altura;
     }
@@ -24,9 +24,9 @@ public class ArvoreAVL {
         return Math.max(a, b);
     }
 
-    No rotacaoDireita(No x) {
-        No y = x.esquerdo;
-        No z = y.direito;
+    NoAVL rotacaoDireita(NoAVL x) {
+        NoAVL y = x.esquerdo;
+        NoAVL z = y.direito;
 
         y.direito = x;
         x.esquerdo = z;
@@ -37,9 +37,9 @@ public class ArvoreAVL {
         return y;
     }
 
-    No rotacaoEsquerda(No x) {
-        No y = x.direito;
-        No z = y.esquerdo;
+    NoAVL rotacaoEsquerda(NoAVL x) {
+        NoAVL y = x.direito;
+        NoAVL z = y.esquerdo;
 
         y.esquerdo = x;
         x.direito = z;
@@ -50,19 +50,19 @@ public class ArvoreAVL {
         return y;
     }
 
-    int getFB(No no) {
+    int getFB(NoAVL no) {
         if (no == null) return 0;
         return altura(no.esquerdo) - altura(no.direito);
     }
 
-    No inserir(No no, String chave) {
+    NoAVL inserir(NoAVL no, String chave) {
 
-        if (no == null) return (new No(chave));
+        if (no == null) return (new NoAVL(chave));
 
         if (chave.compareTo(no.chave) < 0) no.esquerdo = inserir(no.esquerdo, chave);
         else if (chave.compareTo(no.chave) > 0) no.direito = inserir(no.direito, chave);
         else {
-            no.valor += 1;
+            no.frequencia += 1;
             return no;
         }
 
@@ -85,21 +85,21 @@ public class ArvoreAVL {
         return no;
     }
 
-    void preOrder(No no) {
+    public void preOrder(NoAVL no) {
         if (no != null) {
-            System.out.print(no.chave + " - " + no.valor + "; ");
             preOrder(no.esquerdo);
+            System.out.print(no.chave + " - " + no.frequencia + "; ");
             preOrder(no.direito);
         }
     }
 
-    No noDeMenorValor(No no) {
-        No noCorrente = no;
+    NoAVL noDeMenorValor(NoAVL no) {
+        NoAVL noCorrente = no;
         while (noCorrente.esquerdo != null) noCorrente = noCorrente.esquerdo;
         return noCorrente;
     }
 
-    No deletar(No raiz, String chave) {
+    NoAVL deletar(NoAVL raiz, String chave) {
         if (raiz == null) return raiz;
 
         if (chave.compareTo(raiz.chave) < 0) raiz.esquerdo  = deletar(raiz.esquerdo, chave);
@@ -108,7 +108,7 @@ public class ArvoreAVL {
 
         else {
             if ((raiz.esquerdo == null) || (raiz.direito == null)) {
-                No temp = null;
+                NoAVL temp = null;
                 if (temp == raiz.esquerdo) temp = raiz.direito;
                 else temp = raiz.esquerdo;
 
@@ -118,7 +118,7 @@ public class ArvoreAVL {
                 } else raiz = temp;
             }
             else {
-                No temp = noDeMenorValor(raiz.direito);
+                NoAVL temp = noDeMenorValor(raiz.direito);
 
                 raiz.chave = temp.chave;
 
@@ -154,26 +154,25 @@ public class ArvoreAVL {
     {
         ArvoreAVL tree = new ArvoreAVL();
 
-        /* Constructing tree given in the above figure */
+        tree.raiz = tree.inserir(tree.raiz, "c");
+        tree.raiz = tree.inserir(tree.raiz, "f");
         tree.raiz = tree.inserir(tree.raiz, "a");
+        tree.raiz = tree.inserir(tree.raiz, "g");
+        tree.raiz = tree.inserir(tree.raiz, "h");
         tree.raiz = tree.inserir(tree.raiz, "b");
-        tree.raiz = tree.inserir(tree.raiz, "c");
-        tree.raiz = tree.inserir(tree.raiz, "c");
         tree.raiz = tree.inserir(tree.raiz, "c");
         tree.raiz = tree.inserir(tree.raiz, "c");
         tree.raiz = tree.inserir(tree.raiz, "d");
         tree.raiz = tree.inserir(tree.raiz, "e");
-        tree.raiz = tree.inserir(tree.raiz, "f");
-        tree.raiz = tree.inserir(tree.raiz, "g");
-        tree.raiz = tree.inserir(tree.raiz, "h");
+        tree.raiz = tree.inserir(tree.raiz, "c");
         tree.raiz = tree.inserir(tree.raiz, "i");
 
         System.out.println("Preorder traversal of "+
                 "constructed tree is : ");
         tree.preOrder(tree.raiz);
 
-        tree.raiz = tree.deletar(tree.raiz, "f");
-        System.out.println("");
+        tree.raiz = tree.deletar(tree.raiz, "b");
+        System.out.println();
         System.out.println("Preorder traversal after "+
                 "deletion of 10 :");
         tree.preOrder(tree.raiz);

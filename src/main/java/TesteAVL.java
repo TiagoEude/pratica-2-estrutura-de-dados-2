@@ -1,24 +1,17 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public class TesteAVL {
-    List<String> registros;
     ArvoreAVL arvoreAVL;
-    Integer contador;
+    int contador;
 
-    TesteAVL(List registros)
-    {
-        this.registros = registros;
-        this.arvoreAVL = new ArvoreAVL();
-    }
+    TesteAVL() { this.arvoreAVL = new ArvoreAVL(); }
 
-    public void run()
+    public void run(List<String> registros)
     {
         for (String registro : registros) {
-            contador += 1;
-            arvoreAVL.inserir(arvoreAVL.raiz, registro);
+            this.arvoreAVL.inserir(this.arvoreAVL.raiz, registro);
+            this.contador += 1;
         }
-        System.out.println(arvoreAVL);
+        this.arvoreAVL.preOrder(this.arvoreAVL.raiz);
     }
-
 }

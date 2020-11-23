@@ -1,4 +1,3 @@
-import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class Lista {
     }
 
 
-    public static void main(String[] args) {
+    public static void testClass(String[] args) {
         Lista lista = new Lista();
         lista.add("tiago");
         lista.add("bruno");
